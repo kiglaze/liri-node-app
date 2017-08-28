@@ -1,5 +1,6 @@
 var myKeys = require("./keys.js");
 var command = process.argv[2];
+var additionalCommandDetails = process.argv[3];
 
 var Twitter = require('twitter');
 var twitterParams = {screen_name: 'KIGDevAccount'};
@@ -16,6 +17,10 @@ var omdbApiUrl = "http://www.omdbapi.com";
 var request = require('request');
 var omdbKeys = myKeys.omdbKeys;
 
+var fs = require('fs');
+// console.log(JSON.stringify(fs, null, 2));
+var inputFilePath = "random.txt";
+
 
 
 
@@ -24,13 +29,47 @@ switch(command) {
 		printTwitterTweets(twitterParams, twitterClient);
 		break;
 	case("spotify-this-song"):
-		var songQuery = (process.argv[3]) ? (process.argv[3]) : "The Sign";
+		var songQuery = (additionalCommandDetails) ? (additionalCommandDetails) : "The Sign";
 		searchSpotify(spotifyClient, songQuery);
 		break;
 	case("movie-this"):
-		var movieName = (process.argv[3]) ? (process.argv[3]) : "Mr. Nobody";
+		var movieName = (additionalCommandDetails) ? (additionalCommandDetails) : "Mr. Nobody";
 		doMovieSearch(movieName);
 		break;
+	case("do-what-it-says"):
+		followCommandsInFile(inputFilePath);
+		break;
+}
+
+function followCommandsInFile(fileRelativePath) {
+	fs.readFile(fileRelativePath, "utf8", function(error, data) {
+		if(!error) {
+			// Then split it by commas (to make it more readable)
+			var dataArr = data.split(",");
+
+			// We will then re-display the content as an array for later use.
+			console.log(dataArr);
+			command = dataArr[0];
+			additionalCommandDetails = dataArr[1];
+			console.log(command);
+			console.log(additionalCommandDetails);
+			switch(command) {
+				case("my-tweets"):
+					printTwitterTweets(twitterParams, twitterClient);
+					break;
+				case("spotify-this-song"):
+					var songQuery = (additionalCommandDetails) ? (additionalCommandDetails) : "The Sign";
+					searchSpotify(spotifyClient, songQuery);
+					break;
+				case("movie-this"):
+					var movieName = (additionalCommandDetails) ? (additionalCommandDetails) : "Mr. Nobody";
+					doMovieSearch(movieName);
+					break;
+			}
+		} else {
+			console.log(error);
+		}
+	});
 }
 
 function doMovieSearch(movieName) {
