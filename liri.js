@@ -3,7 +3,8 @@ var command = process.argv[2];
 var additionalCommandDetails = process.argv.slice(3).join(" ");;
 
 var Twitter = require('twitter');
-var twitterParams = {screen_name: 'KIGDevAccount'};
+const TWEET_COUNT_LIMIT = 20;
+var twitterParams = {screen_name: 'KIGDevAccount', count: TWEET_COUNT_LIMIT};
 var twitterClient = new Twitter(myKeys.twitterKeys);
 
 var Spotify = require('node-spotify-api');
