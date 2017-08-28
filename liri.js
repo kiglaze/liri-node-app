@@ -1,6 +1,6 @@
 var myKeys = require("./keys.js");
 var command = process.argv[2];
-var additionalCommandDetails = process.argv[3];
+var additionalCommandDetails = process.argv.slice(3).join(" ");;
 
 var Twitter = require('twitter');
 var twitterParams = {screen_name: 'KIGDevAccount'};
