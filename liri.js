@@ -34,6 +34,7 @@ switch(command) {
 }
 
 function doMovieSearch(movieName) {
+	movieName = prepareMovieTitleForSearch(movieName);
 	var omdbApiKey = omdbKeys.api_key;
 	var dataRequestUrl = `${omdbApiUrl}/?apikey=${omdbApiKey}&t=${movieName}`;
 	request(dataRequestUrl, function(error, response, body) {
@@ -46,7 +47,7 @@ function doMovieSearch(movieName) {
 			for(var ratingIndex = 0; ratingIndex < ratings.length; ratingIndex++) {
 				var rating = ratings[ratingIndex];
 				if((rating.Source) === "Rotten Tomatoes" || (rating.Source) === "Internet Movie Database") {
-					console.log(`${rating.Source}: ${rating.Value}`);
+					console.log(`Rating -- ${rating.Source}: ${rating.Value}`);
 				}
 			}
 
@@ -59,6 +60,15 @@ function doMovieSearch(movieName) {
 			console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
 		}
 	});
+}
+
+function prepareMovieTitleForSearch(movieTitle) {
+	var movieTitlePhrases = movieTitle.split(' ');
+	for (var i = 0; i < movieTitlePhrases.length; i++) {
+		movieTitlePhrases[i] = encodeURIComponent(movieTitlePhrases[i])
+	}
+	var preparedMovieTitle = movieTitlePhrases.join('+');
+	return preparedMovieTitle;
 }
 
 function printTwitterTweets(twitterParams, twitterClient) {
