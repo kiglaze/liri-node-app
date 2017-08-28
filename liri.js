@@ -7,7 +7,7 @@ var twitterClient = new Twitter(myKeys.twitterKeys);
 
 
 switch(command) {
-	case("twitter"):
+	case("my-tweets"):
 		printTwitterTweets(twitterParams, twitterClient);
 		break;
 	case("asdf"):
