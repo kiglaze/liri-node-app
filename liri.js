@@ -12,6 +12,12 @@ var spotifyClient = new Spotify({
 	secret: spotifyKeys.client_secret
 });
 
+var omdbApiUrl = "http://www.omdbapi.com";
+var request = require('request');
+var omdbKeys = myKeys.omdbKeys;
+
+
+
 
 switch(command) {
 	case("my-tweets"):
@@ -21,8 +27,38 @@ switch(command) {
 		var songQuery = (process.argv[3]) ? (process.argv[3]) : "The Sign";
 		searchSpotify(spotifyClient, songQuery);
 		break;
-	case("qwerty"):
+	case("movie-this"):
+		var movieName = (process.argv[3]) ? (process.argv[3]) : "Mr. Nobody";
+		doMovieSearch(movieName);
 		break;
+}
+
+function doMovieSearch(movieName) {
+	var omdbApiKey = omdbKeys.api_key;
+	var dataRequestUrl = `${omdbApiUrl}/?apikey=${omdbApiKey}&t=${movieName}`;
+	request(dataRequestUrl, function(error, response, body) {
+		if(!error) {
+			var parsedResponse = JSON.parse(body);
+			console.log("Title: " + parsedResponse.Title);
+			console.log("Year: " + parsedResponse.Year);
+			
+			var ratings = parsedResponse.Ratings;
+			for(var ratingIndex = 0; ratingIndex < ratings.length; ratingIndex++) {
+				var rating = ratings[ratingIndex];
+				if((rating.Source) === "Rotten Tomatoes" || (rating.Source) === "Internet Movie Database") {
+					console.log(`${rating.Source}: ${rating.Value}`);
+				}
+			}
+
+			console.log("Country: " + parsedResponse.Country);
+			console.log("Language: " + parsedResponse.Language);
+			console.log("Plot: " + parsedResponse.Plot);
+			console.log("Actors: " + parsedResponse.Actors);
+		} else {
+			console.log('error:', error); // Print the error if one occurred 
+			console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
+		}
+	});
 }
 
 function printTwitterTweets(twitterParams, twitterClient) {
