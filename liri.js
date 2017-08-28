@@ -20,9 +20,6 @@ var omdbKeys = myKeys.omdbKeys;
 var fs = require('fs');
 var inputFilePath = "random.txt";
 
-
-
-
 switch(command) {
 	case("my-tweets"):
 		printTwitterTweets(twitterParams, twitterClient);
