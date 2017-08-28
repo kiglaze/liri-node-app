@@ -18,7 +18,6 @@ var request = require('request');
 var omdbKeys = myKeys.omdbKeys;
 
 var fs = require('fs');
-// console.log(JSON.stringify(fs, null, 2));
 var inputFilePath = "random.txt";
 
 
